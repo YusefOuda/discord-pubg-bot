@@ -15,7 +15,7 @@ def get_stats_embed(username):
         return embed
     json = r.json()
     embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=datetime.datetime.utcnow())
-    embed.set_footer(text="Data provided by https://pubgtracker.com", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
+    embed.set_footer(text="Bot created by Yusef Ouda", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
     embed.set_thumbnail(url=json['Avatar'])
     embed.set_author(name=username, url="https://pubgtracker.com/profile/pc/" + username, icon_url=json['Avatar'])
     embed.add_field(name=":walking: __Solo__ :walking:", value="Wins: " + get_stat(json['Stats'], 'solo', 'Wins') + ' - Rank: ' + str(get_stat(json['Stats'], 'solo', 'Rating', 'rank')), inline=False)
