@@ -18,27 +18,15 @@ def get_stats_embed(username):
     embed.set_footer(text="Bot created by Yusef Ouda", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
     embed.set_thumbnail(url=json['Avatar'])
     embed.set_author(name=username, url="https://pubgtracker.com/profile/pc/" + username, icon_url=json['Avatar'])
-    embed.add_field(name=":walking: __Solo__ :walking:", value="Wins: " + get_stat(json['Stats'], 'solo', 'Wins') + ' - Rank: ' + str(get_stat(json['Stats'], 'solo', 'Rating', 'rank')), inline=False)
-    embed.add_field(name="Rating", value=get_stat(json['Stats'], 'solo', 'Rating'), inline=True)
-    embed.add_field(name="Win Percentage", value=get_stat(json['Stats'], 'solo', 'WinRatio'), inline=True)
-    embed.add_field(name="Top 10 Percentage", value=get_stat(json['Stats'], 'solo', 'Top10Ratio'), inline=True)
-    embed.add_field(name="K/D Ratio", value=get_stat(json['Stats'], 'solo', 'KillDeathRatio'), inline=True)
-    embed.add_field(name="Total Kills", value=get_stat(json['Stats'], 'solo', 'Kills'), inline=True)
-    embed.add_field(name="Most Kills", value=get_stat(json['Stats'], 'solo', 'RoundMostKills'), inline=True)
-    embed.add_field(name=":couple: __Duo__ :couple:", value="Wins: " + get_stat(json['Stats'], 'duo', 'Wins') + ' - Rank: ' + str(get_stat(json['Stats'], 'duo', 'Rating', 'rank')), inline=False)
-    embed.add_field(name="Rating", value=get_stat(json['Stats'], 'duo', 'Rating'), inline=True)
-    embed.add_field(name="Win Percentage", value=get_stat(json['Stats'], 'duo', 'WinRatio'), inline=True)
-    embed.add_field(name="Top 10 Percentage", value=get_stat(json['Stats'], 'duo', 'Top10Ratio'), inline=True)
-    embed.add_field(name="K/D Ratio", value=get_stat(json['Stats'], 'duo', 'KillDeathRatio'), inline=True)
-    embed.add_field(name="Total Kills", value=get_stat(json['Stats'], 'duo', 'Kills'), inline=True)
-    embed.add_field(name="Most Kills", value=get_stat(json['Stats'], 'duo', 'RoundMostKills'), inline=True)
-    embed.add_field(name=":family: __Squad__ :family:", value="Wins: " + get_stat(json['Stats'], 'squad', 'Wins') + ' - Rank: ' + str(get_stat(json['Stats'], 'squad', 'Rating', 'rank')), inline=False)
-    embed.add_field(name="Rating", value=get_stat(json['Stats'], 'squad', 'Rating'), inline=True)
-    embed.add_field(name="Win Percentage", value=get_stat(json['Stats'], 'squad', 'WinRatio'), inline=True)
-    embed.add_field(name="Top 10 Percentage", value=get_stat(json['Stats'], 'squad', 'Top10Ratio'), inline=True)
-    embed.add_field(name="K/D Ratio", value=get_stat(json['Stats'], 'squad', 'KillDeathRatio'), inline=True)
-    embed.add_field(name="Total Kills", value=get_stat(json['Stats'], 'squad', 'Kills'), inline=True)
-    embed.add_field(name="Most Kills", value=get_stat(json['Stats'], 'squad', 'RoundMostKills'), inline=True)
+    embed.add_field(name=":walking: __Solo__ :walking:", value="**Wins**: " + get_stat(json['Stats'], 'solo', 'Wins') + '\n**Rank**: ' + str(get_stat(json['Stats'], 'solo', 'Rating', 'rank')), inline=False)
+    embed.add_field(name="Stats", value=get_stats_text(json['Stats'], 'solo', 'stats'), inline=True)
+	embed.add_field(name="Kill Stats", value=get_stats_text(json['Stats'], 'solo', 'kills'), inline=True)
+    embed.add_field(name=":couple: __Duo__ :couple:", value="**Wins**: " + get_stat(json['Stats'], 'duo', 'Wins') + '\n**Rank**: ' + str(get_stat(json['Stats'], 'duo', 'Rating', 'rank')), inline=False)
+    embed.add_field(name="Stats", value=get_stats_text(json['Stats'], 'duo', 'stats'), inline=True)
+	embed.add_field(name="Kill Stats", value=get_stats_text(json['Stats'], 'duo', 'kills'), inline=True)
+    embed.add_field(name=":family: __Squad__ :family:", value="**Wins**: " + get_stat(json['Stats'], 'squad', 'Wins') + '\n**Rank**: ' + str(get_stat(json['Stats'], 'squad', 'Rating', 'rank')), inline=False)
+    embed.add_field(name="Stats", value=get_stats_text(json['Stats'], 'squad', 'stats'), inline=True)
+	embed.add_field(name="Kill Stats", value=get_stats_text(json['Stats'], 'squad', 'kills'), inline=True)
     return embed
 
 def get_stat(stats, group, field, default="displayValue"):
@@ -47,6 +35,18 @@ def get_stat(stats, group, field, default="displayValue"):
             for stat in grp['Stats']:
                 if stat['field'] == field:
                     return stat[default]
+
+def get_stats_text(stats, group, type):
+	if type == "stats":
+		text = "**Rating**: " + get_stat(stats, group, 'Rating') + "\n"
+		text += "**Win %**: " + value=get_stat(stats, group, 'WinRatio') + "\n"
+		text += "**Top 10 %**: " + value=get_stat(stats, group, 'Top10Ratio')
+	elif type == "kills":
+		text = "**Total Kills**: " + get_stat(stats, group, 'Kills') + "\n"
+		text += "**Most Kills**: " + value=get_stat(stats, group, 'RoundMostKills') + "\n"
+		text += "**K/D Ratio**: " + value=get_stat(stats, group, 'KillDeathRatio')
+
+	return text
     
 @client.event
 @asyncio.coroutine
