@@ -49,18 +49,20 @@ def get_stat(stats, group, field, default="displayValue"):
                     return stat[default]
     
 @client.event
-async def on_ready():
+@asyncio.coroutine
+def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
     print('------')
 
 @client.event
-async def on_message(message):
+@asyncio.coroutine
+def on_message(message):
     if message.content.startswith('!stats'):
         text = message.content.split(' ')
         if len(text) < 2:
-            await client.send_message(message.channel, 'Please supply a username (e.g. !stats youda)')
-        await client.send_message(message.channel, embed=get_stats_embed(text[1]))
+            yield from client.send_message(message.channel, 'Please supply a username (e.g. !stats youda)')
+        yield from client.send_message(message.channel, embed=get_stats_embed(text[1]))
 
 client.run(DISCORD_API_KEY)
