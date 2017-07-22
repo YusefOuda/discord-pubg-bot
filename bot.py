@@ -32,7 +32,7 @@ def get_stats_embed(username, region):
 
 def get_stat(stats, group, field, display, region):
 	for grp in stats:
-		if grp["Match"] == group && grp["Region"] == region:
+		if grp["Match"] == group and grp["Region"] == region:
 			for stat in grp["Stats"]:
 				if stat["field"] == field:
 					return stat[display]
