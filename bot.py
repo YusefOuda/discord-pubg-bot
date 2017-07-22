@@ -39,13 +39,13 @@ def get_stat(stats, group, field, display, region):
 
 def get_stats_text(stats, group, type, region):
 	if type == "stats":
-		text = "**Rating**: " + get_stat(stats, group, "Rating", "displayValue") + "\n"
-		text += "**Win Pct**: " + get_stat(stats, group, "WinRatio", "displayValue") + "\n"
-		text += "**Top 10 Pct**: " + get_stat(stats, group, "Top10Ratio", "displayValue")
+		text = "**Rating**: " + get_stat(stats, group, "Rating", "displayValue", region) + "\n"
+		text += "**Win Pct**: " + get_stat(stats, group, "WinRatio", "displayValue", region) + "\n"
+		text += "**Top 10 Pct**: " + get_stat(stats, group, "Top10Ratio", "displayValue", region)
 	elif type == "kills":
-		text = "**Total Kills**: " + get_stat(stats, group, "Kills", "displayValue") + "\n"
-		text += "**Most Kills**: " + get_stat(stats, group, "RoundMostKills", "displayValue") + "\n"
-		text += "**K/D Ratio**: " + get_stat(stats, group, "KillDeathRatio", "displayValue")
+		text = "**Total Kills**: " + get_stat(stats, group, "Kills", "displayValue", region) + "\n"
+		text += "**Most Kills**: " + get_stat(stats, group, "RoundMostKills", "displayValue", region) + "\n"
+		text += "**K/D Ratio**: " + get_stat(stats, group, "KillDeathRatio", "displayValue", region)
 	return text
 	
 @client.event
