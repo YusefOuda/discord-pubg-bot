@@ -65,7 +65,7 @@ def on_message(message):
 		if len(text) < 2:
 			yield from client.send_message(message.channel, "Please supply a username (e.g. !stats youda)")
 		if len(text) == 3:
-                        region = text[2]
+			region = text[2]
 		yield from client.send_message(message.channel, embed=get_stats_embed(text[1], region))
 
 client.run(DISCORD_API_KEY)
