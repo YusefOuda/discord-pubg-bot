@@ -17,7 +17,7 @@ def get_stats_embed(username, region):
 	if json_stats.get("error") and json_stats.get("message"):
 		embed = discord.Embed(title=json_stats["message"], colour=discord.Colour(0xe74c3c))
 		return embed
-	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=json_stats["LastUpdated"])
+	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=datetime.datetime.utcnow())
 	embed.set_footer(text="https://github.com/YusefOuda/discord-pubg-bot", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
 	embed.set_thumbnail(url=json_stats["Avatar"])
 	embed.set_author(name=username, url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
