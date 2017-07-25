@@ -43,3 +43,7 @@ img {
 	display: block;
 	cursor: pointer;
 }
+
+p {
+	margin: 0 auto;
+}
