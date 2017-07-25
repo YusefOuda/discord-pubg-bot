@@ -70,14 +70,14 @@ def on_ready():
 @client.event
 @asyncio.coroutine
 def on_message(message):
-	if message.content.lower().startswith("!stats"):
+	if message.content.lower().startswith(".pubg"):
 		text = " ".join(message.content.split()).split()
 		region = "na"
 		if len(text) < 2:
 			yield from client.send_message(message.channel, "Please supply a username (e.g. !stats youda)")
 			return
 		if len(text) == 3:
-			region = text[2]
+			region = text[2].lower()
 		if region not in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
 			yield from client.send_message(message.channel, "Invalid region " + region + ". Accepted values are (na, as, eu, sea, oc, sa, agg)")
 			return
