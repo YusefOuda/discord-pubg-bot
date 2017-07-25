@@ -47,3 +47,9 @@ img {
 p {
 	margin: 0 auto;
 }
+
+.screenshot {
+	width: 75%;
+	cursor: inherit;
+	margin-top: 1em;
+}
