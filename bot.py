@@ -4,9 +4,11 @@ import requests
 import datetime
 import pdb
 from keys import TRN_API_KEY, DISCORD_API_KEY
+from ratelimit import rate_limited
 
 client = discord.Client()
 
+@rate_limited(1)
 def get_stats_embed(username, region):
 	headers = {"TRN-Api-Key": TRN_API_KEY}
 	resp = requests.get("https://pubgtracker.com/api/profile/pc/" + username, headers=headers)
