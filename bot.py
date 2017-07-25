@@ -20,7 +20,7 @@ def get_stats_embed(username, region):
 	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=datetime.datetime.utcnow())
 	embed.set_footer(text="http://yusefouda.com/discord-pubg-bot/", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
 	embed.set_thumbnail(url=json_stats["Avatar"])
-	embed.set_author(name=username + " - " + region, url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
+	embed.set_author(name=username + " - " + region.upper(), url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
 	if check_region_group_exists(json_stats["Stats"], "solo", region):
 		embed.add_field(name=":walking: __Solo__ :walking:", value="**Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region)), inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region), inline=True)
