@@ -4,20 +4,27 @@
 	}
 }
 
+html {
+	background-color: #23272A;
+}
+
+body {
+}
+
 html, body {
 	height: 100%;
 }
 
 body {
-	color: #444;
-	background: #f9f9f9;
+	color: #FFFFFF;
+	background: #2C2F33;
 	margin: 0 auto;
 	max-width: 45em;
 	padding: 0 .62em;
 	font: 1.2em/1.62em sans-serif
 }
 
-h2 {
+h1, h2 {
 	margin-top: 0;
 	margin: 0 auto;
 }
