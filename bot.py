@@ -22,15 +22,15 @@ def get_stats_embed(username, region):
 	embed.set_thumbnail(url=json_stats["Avatar"])
 	embed.set_author(name=username + " - " + region.upper(), url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
 	if check_region_group_exists(json_stats["Stats"], "solo", region):
-		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region) + "- **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region)), inline=False)
+		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region)), inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region), inline=True)
 		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "solo", "kills", region), inline=True)
 	if check_region_group_exists(json_stats["Stats"], "duo", region):
-		embed.add_field(name=":couple: __Duo__ :couple:", value="**Played**: " + get_stat(json_stats["Stats"], "duo", "RoundsPlayed", "displayValue", region) + "- **Wins**: " + get_stat(json_stats["Stats"], "duo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "duo", "Rating", "rank", region)), inline=False)
+		embed.add_field(name=":couple: __Duo__ :couple:", value="**Played**: " + get_stat(json_stats["Stats"], "duo", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "duo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "duo", "Rating", "rank", region)), inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "duo", "stats", region), inline=True)
 		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "duo", "kills", region), inline=True)
 	if check_region_group_exists(json_stats["Stats"], "squad", region):
-		embed.add_field(name=":family: __Squad__ :family:", value="**Played**: " + get_stat(json_stats["Stats"], "squad", "RoundsPlayed", "displayValue", region) + "- **Wins**: " + get_stat(json_stats["Stats"], "squad", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "squad", "Rating", "rank", region)), inline=False)
+		embed.add_field(name=":family: __Squad__ :family:", value="**Played**: " + get_stat(json_stats["Stats"], "squad", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "squad", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "squad", "Rating", "rank", region)), inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "squad", "stats", region), inline=True)
 		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "squad", "kills", region), inline=True)
 	return embed
