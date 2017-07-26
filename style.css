@@ -64,3 +64,11 @@ p {
 	cursor: inherit;
 	margin-top: 1em;
 }
+
+.disclaimer {
+	font-size: .7em;
+}
+
+a {
+	color: #7289DA;
+}
