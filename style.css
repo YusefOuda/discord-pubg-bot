@@ -2,6 +2,10 @@
 	.links p {
 		display: none !important;
 	}
+
+	img {
+		width: 100% !important;
+	}
 }
 
 html {
