@@ -23,42 +23,42 @@ def get_stats_embed(username, region):
 	embed.set_footer(text="yusefouda.com/discord-pubg-bot", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
 	embed.set_thumbnail(url=json_stats["Avatar"])
 	embed.set_author(name=json_stats["PlayerName"] + " - " + region.upper(), url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
-	if check_region_group_exists(json_stats["Stats"], "solo", region):
-		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region)), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "solo", "kills", region), inline=True)
-	if check_region_group_exists(json_stats["Stats"], "duo", region):
-		embed.add_field(name=":couple: __Duo__ :couple:", value="**Played**: " + get_stat(json_stats["Stats"], "duo", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "duo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "duo", "Rating", "rank", region)), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "duo", "stats", region), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "duo", "kills", region), inline=True)
-	if check_region_group_exists(json_stats["Stats"], "squad", region):
-		embed.add_field(name=":family: __Squad__ :family:", value="**Played**: " + get_stat(json_stats["Stats"], "squad", "RoundsPlayed", "displayValue", region) + " - **Wins**: " + get_stat(json_stats["Stats"], "squad", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "squad", "Rating", "rank", region)), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "squad", "stats", region), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "squad", "kills", region), inline=True)
+	if check_region_group_exists(json_stats["Stats"], "solo", region, json_stats["Season"]):
+		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region, json_stats["Season"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region, json_stats["Season"])), inline=False)
+		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region, json_stats["Season"]), inline=True)
+		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "solo", "kills", region, json_stats["Season"]), inline=True)
+	if check_region_group_exists(json_stats["Stats"], "duo", region, json_stats["Season"]):
+		embed.add_field(name=":couple: __Duo__ :couple:", value="**Played**: " + get_stat(json_stats["Stats"], "duo", "RoundsPlayed", "displayValue", region, json_stats["Season"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "duo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "duo", "Rating", "rank", region, json_stats["Season"])), inline=False)
+		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "duo", "stats", region, json_stats["Season"]), inline=True)
+		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "duo", "kills", region, json_stats["Season"]), inline=True)
+	if check_region_group_exists(json_stats["Stats"], "squad", region, json_stats["Season"]):
+		embed.add_field(name=":family: __Squad__ :family:", value="**Played**: " + get_stat(json_stats["Stats"], "squad", "RoundsPlayed", "displayValue", region, json_stats["Season"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "squad", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "squad", "Rating", "rank", region, json_stats["Season"])), inline=False)
+		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "squad", "stats", region, json_stats["Season"]), inline=True)
+		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "squad", "kills", region, json_stats["Season"]), inline=True)
 	return embed
 
-def check_region_group_exists(stats, group, region):
+def check_region_group_exists(stats, group, region, season):
 	for grp in stats:
-		if grp["Match"] == group and grp["Region"] == region:
+		if grp["Match"] == group and grp["Region"] == region && grp["Season"] == season:
 			return True
 	return False
 
-def get_stat(stats, group, field, display, region):
+def get_stat(stats, group, field, display, region, season):
 	for grp in stats:
-		if grp["Match"] == group and grp["Region"] == region:
+		if grp["Match"] == group and grp["Region"] == region && grp["Season"] == season:
 				for stat in grp["Stats"]:
 					if stat["field"] == field:
 							return stat[display]
 
-def get_stats_text(stats, group, type, region):
+def get_stats_text(stats, group, type, region, season):
 	if type == "stats":
-		text = "**Rating**: " + get_stat(stats, group, "Rating", "displayValue", region) + "\n"
-		text += "**Win Pct**: " + get_stat(stats, group, "WinRatio", "displayValue", region) + "\n"
-		text += "**Top 10 Pct**: " + get_stat(stats, group, "Top10Ratio", "displayValue", region)
+		text = "**Rating**: " + get_stat(stats, group, "Rating", "displayValue", region, season) + "\n"
+		text += "**Win Pct**: " + get_stat(stats, group, "WinRatio", "displayValue", region, season) + "\n"
+		text += "**Top 10 Pct**: " + get_stat(stats, group, "Top10Ratio", "displayValue", region, season)
 	elif type == "kills":
-		text = "**Total Kills**: " + get_stat(stats, group, "Kills", "displayValue", region) + "\n"
-		text += "**Most Kills**: " + get_stat(stats, group, "RoundMostKills", "displayValue", region) + "\n"
-		text += "**K/D Ratio**: " + get_stat(stats, group, "KillDeathRatio", "displayValue", region)
+		text = "**Total Kills**: " + get_stat(stats, group, "Kills", "displayValue", region, season) + "\n"
+		text += "**Most Kills**: " + get_stat(stats, group, "RoundMostKills", "displayValue", region, season) + "\n"
+		text += "**K/D Ratio**: " + get_stat(stats, group, "KillDeathRatio", "displayValue", region, season)
 	return text
 
 @client.event
