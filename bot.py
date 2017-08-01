@@ -3,7 +3,7 @@ import asyncio
 import requests
 from datetime import datetime
 import pdb
-from keys import TRN_API_KEY, DISCORD_API_KEY
+from keys import TRN_API_KEY, token
 from ratelimit import rate_limited
 
 client = discord.Client()
@@ -96,4 +96,4 @@ def on_message(message):
 			return
 		yield from client.send_message(message.channel, embed=get_stats_embed(text[1], region))
 
-client.run(DISCORD_API_KEY)
+client.run(token)
