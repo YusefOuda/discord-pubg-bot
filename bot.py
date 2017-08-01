@@ -22,7 +22,7 @@ def get_stats_embed(username, region):
 	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=datetime.datetime.utcnow())
 	embed.set_footer(text="yusefouda.com/discord-pubg-bot", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
 	embed.set_thumbnail(url=json_stats["Avatar"])
-	embed.set_author(name=json_stats["PlayerName"] + " - " + region.upper(), url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
+	embed.set_author(name=json_stats["PlayerName"] + " - " + region.upper() + " - " + json_stats["seasonDisplay"], url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
 	if check_region_group_exists(json_stats["Stats"], "solo", region, json_stats["Season"]):
 		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region, json_stats["Season"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region, json_stats["Season"])), inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region, json_stats["Season"]), inline=True)
