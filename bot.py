@@ -1,7 +1,7 @@
 import discord
 import asyncio
 import requests
-import datetime
+from datetime import datetime
 import pdb
 from keys import TRN_API_KEY, DISCORD_API_KEY
 from ratelimit import rate_limited
@@ -10,32 +10,43 @@ client = discord.Client()
 
 @rate_limited(1)
 def get_stats_embed(username, region):
-	headers = {"TRN-Api-Key": TRN_API_KEY}
-	resp = requests.get("https://pubgtracker.com/api/profile/pc/" + username, headers=headers)
+	resp = get_stats_resp(username)
 	if resp.status_code != 200:
 		embed = discord.Embed(title="Could not get stats for player " + username, colour=discord.Colour(0xe74c3c))
 		return embed
-	json_stats = resp.json()
-	if json_stats.get("error") and json_stats.get("message"):
-		embed = discord.Embed(title=json_stats["message"], colour=discord.Colour(0xe74c3c))
+	stats = resp.json()
+	if stats.get("error") and stats.get("message"):
+		embed = discord.Embed(title=stats["message"], colour=discord.Colour(0xe74c3c))
 		return embed
-	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=datetime.datetime.utcnow())
-	embed.set_footer(text="yusefouda.com/discord-pubg-bot", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
-	embed.set_thumbnail(url=json_stats["Avatar"])
-	embed.set_author(name=json_stats["PlayerName"] + " - " + region.upper() + " - " + json_stats["seasonDisplay"], url="https://pubgtracker.com/profile/pc/" + username, icon_url=json_stats["Avatar"])
-	if check_region_group_exists(json_stats["Stats"], "solo", region, json_stats["defaultSeason"]):
-		embed.add_field(name=":walking: __Solo__ :walking:", value="**Played**: " + get_stat(json_stats["Stats"], "solo", "RoundsPlayed", "displayValue", region, json_stats["defaultSeason"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "solo", "Wins", "displayValue", region, json_stats["defaultSeason"]) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "solo", "Rating", "rank", region, json_stats["defaultSeason"])), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "solo", "stats", region, json_stats["defaultSeason"]), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "solo", "kills", region, json_stats["defaultSeason"]), inline=True)
-	if check_region_group_exists(json_stats["Stats"], "duo", region, json_stats["defaultSeason"]):
-		embed.add_field(name=":couple: __Duo__ :couple:", value="**Played**: " + get_stat(json_stats["Stats"], "duo", "RoundsPlayed", "displayValue", region, json_stats["defaultSeason"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "duo", "Wins", "displayValue", region, json_stats["defaultSeason"]) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "duo", "Rating", "rank", region, json_stats["defaultSeason"])), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "duo", "stats", region, json_stats["defaultSeason"]), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "duo", "kills", region, json_stats["defaultSeason"]), inline=True)
-	if check_region_group_exists(json_stats["Stats"], "squad", region, json_stats["defaultSeason"]):
-		embed.add_field(name=":family: __Squad__ :family:", value="**Played**: " + get_stat(json_stats["Stats"], "squad", "RoundsPlayed", "displayValue", region, json_stats["defaultSeason"]) + " - **Wins**: " + get_stat(json_stats["Stats"], "squad", "Wins", "displayValue", region, json_stats["defaultSeason"]) + " - **Rank**: " + str(get_stat(json_stats["Stats"], "squad", "Rating", "rank", region, json_stats["defaultSeason"])), inline=False)
-		embed.add_field(name="Stats", value=get_stats_text(json_stats["Stats"], "squad", "stats", region, json_stats["defaultSeason"]), inline=True)
-		embed.add_field(name="Kill Stats", value=get_stats_text(json_stats["Stats"], "squad", "kills", region, json_stats["defaultSeason"]), inline=True)
+	return get_embed_message(stats, username, region)
+
+def get_embed_message(stats, username, region):
+	last_updated_string = stats["LastUpdated"][:-2] + "Z"
+	last_updated = datetime.strptime(last_updated_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+	embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=last_updated)
+	embed.set_footer(text="Last updated", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
+	embed.set_thumbnail(url=stats["Avatar"])
+	embed.set_author(name=stats["PlayerName"] + " - " + region.upper() + " - " + stats["seasonDisplay"], url="https://pubgtracker.com/profile/pc/" + username, icon_url=stats["Avatar"])
+	embed_group_stats(stats, "solo", region, embed)
+	embed_group_stats(stats, "duo", region, embed)
+	embed_group_stats(stats, "squad", region, embed)
 	return embed
+
+def get_stats_resp(username):
+	headers = {"TRN-Api-Key": TRN_API_KEY}
+	resp = requests.get("https://pubgtracker.com/api/profile/pc/" + username, headers=headers)
+	return resp
+
+def embed_group_stats(stats, group, region, embed):
+	title = ":walking: __Solo__ :walking:"
+	if group == "duo":
+		title = ":couple: __Duo__ :couple:"
+	elif group == "squad":
+		title = ":family: __Squad__ :family:"
+	if check_region_group_exists(stats["Stats"], group, region, stats["defaultSeason"]):
+		embed.add_field(name=title, value="**Played**: " + get_stat(stats["Stats"], group, "RoundsPlayed", "displayValue", region, stats["defaultSeason"]) + " - **Wins**: " + get_stat(stats["Stats"], group, "Wins", "displayValue", region, stats["defaultSeason"]) + " - **Rank**: " + str(get_stat(stats["Stats"], group, "Rating", "rank", region, stats["defaultSeason"])), inline=False)
+		embed.add_field(name="Stats", value=get_stats_text(stats["Stats"], group, "stats", region, stats["defaultSeason"]), inline=True)
+		embed.add_field(name="Kill Stats", value=get_stats_text(stats["Stats"], group, "kills", region, stats["defaultSeason"]), inline=True)
 
 def check_region_group_exists(stats, group, region, season):
 	for grp in stats:
