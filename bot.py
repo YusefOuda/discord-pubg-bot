@@ -39,13 +39,13 @@ def get_stats_embed(username, region):
 
 def check_region_group_exists(stats, group, region, season):
 	for grp in stats:
-		if grp["Match"] == group and grp["Region"] == region && grp["Season"] == season:
+		if grp["Match"] == group and grp["Region"] == region and grp["Season"] == season:
 			return True
 	return False
 
 def get_stat(stats, group, field, display, region, season):
 	for grp in stats:
-		if grp["Match"] == group and grp["Region"] == region && grp["Season"] == season:
+		if grp["Match"] == group and grp["Region"] == region and grp["Season"] == season:
 				for stat in grp["Stats"]:
 					if stat["field"] == field:
 							return stat[display]
