@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import requests
+import aiohttp
 from datetime import datetime
 import pdb
 from keys import TRN_API_KEY, DISCORD_API_KEY
@@ -8,13 +9,14 @@ from ratelimit import rate_limited
 
 client = discord.Client()
 
+@asyncio.coroutine
 @rate_limited(1)
 def get_stats_embed(username, region):
-	resp = get_stats_resp(username)
-	if resp.status_code != 200:
+	resp = yield from get_stats_resp(username)
+	if resp.status != 200:
 		embed = discord.Embed(title="Could not get stats for player " + username, colour=discord.Colour(0xe74c3c))
 		return embed
-	stats = resp.json()
+	stats = yield from resp.json()
 	if stats.get("error") and stats.get("message"):
 		embed = discord.Embed(title=stats["message"], colour=discord.Colour(0xe74c3c))
 		return embed
@@ -32,10 +34,11 @@ def get_embed_message(stats, username, region):
 	embed_group_stats(stats, "squad", region, embed)
 	return embed
 
+@asyncio.coroutine
 def get_stats_resp(username):
 	headers = {"TRN-Api-Key": TRN_API_KEY}
-	resp = requests.get("https://pubgtracker.com/api/profile/pc/" + username, headers=headers)
-	return resp
+	r = yield from aiohttp.get("https://pubgtracker.com/api/profile/pc/" + username, headers=headers)
+	return r
 
 def embed_group_stats(stats, group, region, embed):
 	title = ":walking: __Solo__ :walking:"
@@ -107,6 +110,7 @@ def on_message(message):
 		if region not in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
 			yield from client.send_message(message.channel, "Invalid region " + region + ". Accepted values are (na, as, eu, sea, oc, sa, agg)")
 			return
-		yield from client.send_message(message.channel, embed=get_stats_embed(text[1], region))
+		embed = yield from get_stats_embed(text[1], region)
+		yield from client.send_message(message.channel, embed=embed)
 
 client.run(DISCORD_API_KEY)
