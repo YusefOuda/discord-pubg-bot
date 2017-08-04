@@ -88,11 +88,15 @@ def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print("------")
+	yield from client.change_presence(game=discord.Game(name='.pubghelp'))
 
 @client.event
 @asyncio.coroutine
 def on_message(message):
-	if message.content.lower().startswith(".pubg"):
+	if message.content.lower().startswith(".pubghelp"):
+		yield from client.send_message(message.channel, "To check stats, type `.pubg (name) [region]`\n\nAccepted region values are `(na, as, eu, sea, oc, sa, agg)`. If no region is specified, `na` is default\n\n`.pubg youda` will get the stats for player `youda` in region `na`\n`.pubg youda as` will get the stats for player `youda` in region `as`")
+		return
+	elif message.content.lower().startswith(".pubg "):
 		text = " ".join(message.content.split()).split()
 		region = "na"
 		if len(text) < 2:
