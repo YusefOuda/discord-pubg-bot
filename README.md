@@ -1,4 +1,4 @@
-# discord-pubg-bot
+# [discord-pubg-bot](http://yusefouda.com/discord-pubg-bot)
 
 ## Setup
 
