@@ -69,16 +69,16 @@ def get_stats_text(stats, group, type, region, season):
 		rating_stat = get_stat(stats, group, "Rating", region, season)
 		win_pct_stat = get_stat(stats, group, "WinRatio", region, season)
 		top_ten_stat = get_stat(stats, group, "Top10Ratio", region, season)
-		text = "**Rating**: " + rating_stat["displayValue"] + " (Top " + str(rating_stat["percentile"]) + "%)" + "\n"
-		text += "**Win Pct**: " + win_pct_stat["displayValue"] + " (Top " + str(win_pct_stat["percentile"]) + "%)" + "\n"
-		text += "**Top 10 Pct**: " + top_ten_stat["displayValue"] + " (Top " + str(top_ten_stat["percentile"]) + "%)"
+		text = "**Rating**: " + rating_stat["displayValue"] + " *(Top " + str(rating_stat["percentile"]) + "%)*" + "\n"
+		text += "**Win Pct**: " + win_pct_stat["displayValue"] + " *(Top " + str(win_pct_stat["percentile"]) + "%)*" + "\n"
+		text += "**Top 10 Pct**: " + top_ten_stat["displayValue"] + " *(Top " + str(top_ten_stat["percentile"]) + "%)*"
 	elif type == "kills":
 		total_kills_stat = get_stat(stats, group, "Kills", region, season)
 		most_kills_stat = get_stat(stats, group, "RoundMostKills", region, season)
 		kd_ratio_stat = get_stat(stats, group, "KillDeathRatio", region, season)
-		text = "**Total Kills**: " + total_kills_stat["displayValue"] + " (Top " + str(total_kills_stat["percentile"]) + "%)" + "\n"
-		text += "**Most Kills**: " + most_kills_stat["displayValue"] + " (Top " + str(most_kills_stat["percentile"]) + "%)" + "\n"
-		text += "**K/D Ratio**: " + kd_ratio_stat["displayValue"] + " (Top " + str(kd_ratio_stat["percentile"]) + "%)"
+		text = "**Total Kills**: " + total_kills_stat["displayValue"] + " *(Top " + str(total_kills_stat["percentile"]) + "%)*" + "\n"
+		text += "**Most Kills**: " + most_kills_stat["displayValue"] + " *(Top " + str(most_kills_stat["percentile"]) + "%)*" + "\n"
+		text += "**K/D Ratio**: " + kd_ratio_stat["displayValue"] + " *(Top " + str(kd_ratio_stat["percentile"]) + "%)*"
 	return text
 
 @client.event
