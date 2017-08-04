@@ -44,7 +44,10 @@ def embed_group_stats(stats, group, region, embed):
 	elif group == "squad":
 		title = ":family: __Squad__ :family:"
 	if check_region_group_exists(stats["Stats"], group, region, stats["defaultSeason"]):
-		embed.add_field(name=title, value="**Played**: " + get_stat(stats["Stats"], group, "RoundsPlayed", "displayValue", region, stats["defaultSeason"]) + " - **Wins**: " + get_stat(stats["Stats"], group, "Wins", "displayValue", region, stats["defaultSeason"]) + " - **Rank**: " + str(get_stat(stats["Stats"], group, "Rating", "rank", region, stats["defaultSeason"])), inline=False)
+		rounds_played = get_stat(stats["Stats"], group, "RoundsPlayed", region, stats["defaultSeason"])["displayValue"]
+		wins = get_stat(stats["Stats"], group, "Wins", region, stats["defaultSeason"])["displayValue"]
+		rank = str(get_stat(stats["Stats"], group, "Rating", region, stats["defaultSeason"])["rank"])
+		embed.add_field(name=title, value="**Played**: " + rounds_played + " - **Wins**: " + wins + " - **Rank**: " + rank, inline=False)
 		embed.add_field(name="Stats", value=get_stats_text(stats["Stats"], group, "stats", region, stats["defaultSeason"]), inline=True)
 		embed.add_field(name="Kill Stats", value=get_stats_text(stats["Stats"], group, "kills", region, stats["defaultSeason"]), inline=True)
 
@@ -54,22 +57,28 @@ def check_region_group_exists(stats, group, region, season):
 			return True
 	return False
 
-def get_stat(stats, group, field, display, region, season):
+def get_stat(stats, group, field, region, season):
 	for grp in stats:
 		if grp["Match"] == group and grp["Region"] == region and grp["Season"] == season:
 				for stat in grp["Stats"]:
 					if stat["field"] == field:
-							return stat[display]
+							return stat
 
 def get_stats_text(stats, group, type, region, season):
 	if type == "stats":
-		text = "**Rating**: " + get_stat(stats, group, "Rating", "displayValue", region, season) + "\n"
-		text += "**Win Pct**: " + get_stat(stats, group, "WinRatio", "displayValue", region, season) + "\n"
-		text += "**Top 10 Pct**: " + get_stat(stats, group, "Top10Ratio", "displayValue", region, season)
+		rating_stat = get_stat(stats, group, "Rating", region, season)
+		win_pct_stat = get_stat(stats, group, "WinRatio", region, season)
+		top_ten_stat = get_stat(stats, group, "Top10Ratio", region, season)
+		text = "**Rating**: " + rating_stat["displayValue"] + " (Top " + str(rating_stat["percentile"]) + "%)" + "\n"
+		text += "**Win Pct**: " + win_pct_stat["displayValue"] + " (Top " + str(win_pct_stat["percentile"]) + "%)" + "\n"
+		text += "**Top 10 Pct**: " + top_ten_stat["displayValue"] + " (Top " + str(top_ten_stat["percentile"]) + "%)"
 	elif type == "kills":
-		text = "**Total Kills**: " + get_stat(stats, group, "Kills", "displayValue", region, season) + "\n"
-		text += "**Most Kills**: " + get_stat(stats, group, "RoundMostKills", "displayValue", region, season) + "\n"
-		text += "**K/D Ratio**: " + get_stat(stats, group, "KillDeathRatio", "displayValue", region, season)
+		total_kills_stat = get_stat(stats, group, "Kills", region, season)
+		most_kills_stat = get_stat(stats, group, "RoundMostKills", region, season)
+		kd_ratio_stat = get_stat(stats, group, "KillDeathRatio", region, season)
+		text = "**Total Kills**: " + total_kills_stat["displayValue"] + " (Top " + str(total_kills_stat["percentile"]) + "%)" + "\n"
+		text += "**Most Kills**: " + most_kills_stat["displayValue"] + " (Top " + str(most_kills_stat["percentile"]) + "%)" + "\n"
+		text += "**K/D Ratio**: " + kd_ratio_stat["displayValue"] + " (Top " + str(kd_ratio_stat["percentile"]) + "%)"
 	return text
 
 @client.event
