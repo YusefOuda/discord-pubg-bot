@@ -120,7 +120,12 @@ def on_ready():
 @asyncio.coroutine
 def on_message(message):
     if message.content.lower().startswith(".pubghelp"):
-        yield from client.send_message(message.channel, "To check stats, type `.pubg (name) [region] [game type]`\n\nAccepted region values are `(na, as, eu, sea, oc, sa, agg)`. If no region is specified, `na` is default\n\nAccepted game type values are `(tpp, fpp)`. If no game type is specified, `fpp` is default\n\n`.pubg youda` will get the stats for player `youda` in region `na` for game type `fpp`\n`.pubg youda as tpp` will get the stats for player `youda` in region `as` for game type `tpp`. `.pubg youda tpp` will get the stats for player `youda` in region `na` for gametype `tpp`.")
+        help_message = "To check stats, type `.pubg (name) [region] [game type]`\n\nAccepted region values are `(na, as, eu, sea, oc, sa, agg)`."
+        help_message += " If no region is specified, `na` is default\n\nAccepted game type values are `(tpp, fpp)`. If no game type is specified, `fpp` is default\n\n"
+        help_message += "`.pubg youda` will get the stats for player `youda` in region `na` for game type `fpp`\n"
+        help_message += "`.pubg youda as tpp` will get the stats for player `youda` in region `as` for game type `tpp`."
+        help_message += " `.pubg youda tpp` will get the stats for player `youda` in region `na` for gametype `tpp`."
+        yield from client.send_message(message.channel, help_message)
         return
     elif message.content.lower().startswith(".pubg "):
         text = " ".join(message.content.split()).split()
