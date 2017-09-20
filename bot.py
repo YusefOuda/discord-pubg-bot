@@ -11,7 +11,7 @@ client = discord.Client()
 
 @asyncio.coroutine
 @rate_limited(1)
-def get_stats_embed(username, region, game_type):
+def get_stats_embed(username, region, game_type, group):
     resp = yield from get_stats_resp(username)
     if resp.status != 200:
         embed = discord.Embed(title="Could not get stats for player " + username, colour=discord.Colour(0xe74c3c))
@@ -20,9 +20,9 @@ def get_stats_embed(username, region, game_type):
     if stats.get("error") and stats.get("message"):
         embed = discord.Embed(title=stats["message"], colour=discord.Colour(0xe74c3c))
         return embed
-    return get_embed_message(stats, username, region, game_type)
+    return get_embed_message(stats, username, region, game_type, group)
 
-def get_embed_message(stats, username, region, game_type):
+def get_embed_message(stats, username, region, game_type, group):
     last_updated_string = stats["LastUpdated"][:-2] + "Z"
     last_updated = datetime.strptime(last_updated_string, "%Y-%m-%dT%H:%M:%S.%fZ")
     embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=last_updated)
@@ -32,9 +32,12 @@ def get_embed_message(stats, username, region, game_type):
     solo_game_type = "solo-fpp" if game_type == "fpp" else  "solo"
     duo_game_type = "duo-fpp" if game_type == "fpp" else  "duo"
     squad_game_type = "squad-fpp" if game_type == "fpp" else  "squad"
-    embed_group_stats(stats, solo_game_type, region, embed)
-    embed_group_stats(stats, duo_game_type, region, embed)
-    embed_group_stats(stats, squad_game_type, region, embed)
+    if "solo" in group:
+        embed_group_stats(stats, solo_game_type, region, embed)
+    if "duo" in group:
+        embed_group_stats(stats, duo_game_type, region, embed)
+    if "squad" in group:
+        embed_group_stats(stats, squad_game_type, region, embed)
     return embed
 
 @asyncio.coroutine
@@ -120,8 +123,9 @@ def on_ready():
 @asyncio.coroutine
 def on_message(message):
     if message.content.lower().startswith(".pubghelp"):
-        help_message = "To check stats, type `.pubg (name) [region] [game type]`\n\nAccepted region values are `(na, as, eu, sea, oc, sa, agg)`."
+        help_message = "To check stats, type `.pubg (name) [region] [game type] [group]`\n\nAccepted region values are `(na, as, eu, sea, oc, sa, agg)`."
         help_message += " If no region is specified, `na` is default\n\nAccepted game type values are `(tpp, fpp)`. If no game type is specified, `fpp` is default\n\n"
+        help_message += "Accepted group values are `(solo, duo, squad)`. If no group is specified, all groups will be returned.\n\n"
         help_message += "`.pubg youda` will get the stats for player `youda` in region `na` for game type `fpp`\n"
         help_message += "`.pubg youda as tpp` will get the stats for player `youda` in region `as` for game type `tpp`\n"
         help_message += "`.pubg youda tpp` will get the stats for player `youda` in region `na` for gametype `tpp\n"
@@ -131,25 +135,30 @@ def on_message(message):
         text = " ".join(message.content.split()).split()
         region = "na"
         game_type = "fpp"
+        name = ""
+        group = "solo,duo,squad"
 
         if len(text) < 2:
             yield from client.send_message(message.channel, "Please supply a username (e.g. !stats youda)")
             return
-        if len(text) == 3:
-            if text[2].lower() in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
-                region  = text[2].lower()
-            elif text[2].lower() in ["fpp", "tpp"]:
-                game_type = text[2].lower()
-        if len(text) == 4:
-            region  = text[2].lower()
-            game_type = text[3].lower()
-        if region not in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
-            yield from client.send_message(message.channel, "Invalid region " + region + ". Accepted values are (na, as, eu, sea, oc, sa, agg)")
-            return
-        if game_type not in ["fpp", "tpp"]:
-            yield from client.send_message(message.channel, "Invalid game type " + region + ". Accepted values are (fpp, tpp)")
-            return
-        embed = yield from get_stats_embed(text[1], region, game_type)
+        else:
+            name = text[1]
+            for x in text[2:len(text)]:
+                print(x)
+                arg = x.lower()
+                if arg in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
+                    region = arg
+                elif arg in ["fpp", "tpp"]:
+                    game_type = arg
+                elif arg in ["solo", "duo", "squad"]:
+                    group = arg
+                else:
+                    errormsg = "Invalid argument `" + arg + "`\nAccepted values for region are (na, as, eu, sea, oc, sa, agg)\n"
+                    errormsg +=  "Accepted values for game type are (fpp, tpp)\n"
+                    errormsg +=  "Accepted values for group are (solo, duo, squad)"
+                    yield from client.send_message(message.channel, errormsg)
+                    return
+        embed = yield from get_stats_embed(name, region, game_type, group)
         yield from client.send_message(message.channel, embed=embed)
 
 client.run(DISCORD_API_KEY)
