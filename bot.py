@@ -23,6 +23,7 @@ def get_stats_embed(username, region, game_type, group):
     return get_embed_message(stats, username, region, game_type, group)
 
 def get_embed_message(stats, username, region, game_type, group):
+    has_stats = False
     last_updated_string = stats["LastUpdated"][:-2] + "Z"
     last_updated = datetime.strptime(last_updated_string, "%Y-%m-%dT%H:%M:%S.%fZ")
     embed = discord.Embed(title="Full Stats", colour=discord.Colour(0x316a7b), url="https://pubgtracker.com/profile/pc/" + username, timestamp=last_updated)
@@ -33,11 +34,15 @@ def get_embed_message(stats, username, region, game_type, group):
     duo_game_type = "duo-fpp" if game_type == "fpp" else  "duo"
     squad_game_type = "squad-fpp" if game_type == "fpp" else  "squad"
     if "solo" in group:
-        embed_group_stats(stats, solo_game_type, region, embed)
+        has_stats = embed_group_stats(stats, solo_game_type, region, embed)
     if "duo" in group:
-        embed_group_stats(stats, duo_game_type, region, embed)
+        has_stats = embed_group_stats(stats, duo_game_type, region, embed)
     if "squad" in group:
-        embed_group_stats(stats, squad_game_type, region, embed)
+        has_stats = embed_group_stats(stats, squad_game_type, region, embed)
+
+    if has_stats == False:
+        embed = discord.Embed(title="Could not get stats for player: " + username + ", region: " + region + ", game type: " + game_type + ", group: " + group, colour=discord.Colour(0xe74c3c))
+        return embed
     return embed
 
 @asyncio.coroutine
@@ -59,6 +64,9 @@ def embed_group_stats(stats, group, region, embed):
         embed.add_field(name=title, value="**Played**: " + rounds_played + " - **Wins**: " + wins + " - **Rank**: " + rank, inline=False)
         embed.add_field(name="Stats", value=get_stats_text(stats["Stats"], group, "stats", region, stats["defaultSeason"]), inline=True)
         embed.add_field(name="Kill Stats", value=get_stats_text(stats["Stats"], group, "kills", region, stats["defaultSeason"]), inline=True)
+        return True
+    else:
+        return False
 
 def check_region_group_exists(stats, group, region, season):
     for grp in stats:
@@ -144,7 +152,6 @@ def on_message(message):
         else:
             name = text[1]
             for x in text[2:len(text)]:
-                print(x)
                 arg = x.lower()
                 if arg in ["na", "as", "eu", "sea", "oc", "agg", "sa"]:
                     region = arg
