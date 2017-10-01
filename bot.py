@@ -20,6 +20,9 @@ def get_stats_embed(username, region, game_type, group):
     if stats.get("error") and stats.get("message"):
         embed = discord.Embed(title=stats["message"], colour=discord.Colour(0xe74c3c))
         return embed
+    if stats.get("error"):
+        embed = discord.Embed(title=stats["error"], colour=discord.Colour(0xe74c3c))
+        return embed
     return get_embed_message(stats, username, region, game_type, group)
 
 def get_embed_message(stats, username, region, game_type, group):
