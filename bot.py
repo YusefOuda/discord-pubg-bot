@@ -4,7 +4,7 @@ import requests
 import aiohttp
 from datetime import datetime
 import pdb
-from keys import TRN_API_KEY, DISCORD_API_KEY
+from keys import TRN_API_KEY, token
 from ratelimit import rate_limited
 
 client = discord.Client()
@@ -171,4 +171,4 @@ def on_message(message):
         embed = yield from get_stats_embed(name, region, game_type, group)
         yield from client.send_message(message.channel, embed=embed)
 
-client.run(DISCORD_API_KEY)
+client.run(token)
