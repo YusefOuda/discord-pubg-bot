@@ -1,2 +1,2 @@
 TRN_API_KEY='api-key'
-token='discord bot token'
+DISCORD_TOKEN='discord bot token'
