@@ -139,7 +139,7 @@ def on_message(message):
         help_message += "Accepted group values are `(solo, duo, squad)`. If no group is specified, all groups will be returned.\n\n"
         help_message += "`.pubg youda` will get the stats for player `youda` in region `na` for game type `fpp`\n"
         help_message += "`.pubg youda as tpp` will get the stats for player `youda` in region `as` for game type `tpp`\n"
-        help_message += "`.pubg youda tpp` will get the stats for player `youda` in region `na` for gametype `tpp\n"
+        help_message += "`.pubg youda tpp` will get the stats for player `youda` in region `na` for gametype `tpp`\n"
         yield from client.send_message(message.channel, help_message)
         return
     elif message.content.lower().startswith(".pubg "):
